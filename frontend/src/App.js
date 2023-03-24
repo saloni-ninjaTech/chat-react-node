@@ -19,23 +19,25 @@ const App = () => {
   const socket = io.connect("http://localhost:5000/");
 
   const [message, setMessage] = useState("");
-  const [isMyMessage, setIsMyMessage] = useState(false);
   const [chat, setChat] = useState([]);
   const [user, setUser] = useState(localStorage.getItem("currentUser") || "");
+  const [userName, setUserName] = useState(
+    localStorage.getItem("userName") || ""
+  );
+  const [isError, setIsError] = useState(false);
 
   const emitSocket = () => {
     const payloadParam = {
       message,
       userID: user,
-      datetime: Date.now().toString,
-      isMyMessage: isMyMessage,
+      userName,
+      datetime: new Date().toLocaleTimeString(),
     };
     socket.emit("chat", payloadParam);
   };
 
   const sendChat = (e) => {
     e.preventDefault();
-    setIsMyMessage(true);
     emitSocket();
     setMessage("");
   };
@@ -48,6 +50,7 @@ const App = () => {
 
   useEffect(() => {
     localStorage.setItem("currentUser", JSON.stringify(uuidv4()));
+    localStorage.setItem("userName", JSON.stringify("sender"));
   }, []);
 
   return (
@@ -63,8 +66,21 @@ const App = () => {
         <Grid item xs={12}>
           <List>
             {chat?.map((payload, index) => (
-              <ListItem key={index}>
-                <Grid container>
+              <ListItem
+                key={index}
+                sx={{
+                  backgroundColor: "#e2f2f9",
+                  width: "70%",
+                  borderRadius: "10px",
+                  marginRight: payload.userID === user ? null : "auto",
+                  marginLeft: payload.userID === user ? "auto" : null,
+                  marginBottom: "5px",
+                }}
+              >
+                <Grid
+                  container
+                  alignItems={payload.userID === user ? "right" : "left"}
+                >
                   <Grid item xs={12}>
                     <ListItemText
                       align={payload.userID === user ? "right" : "left"}
@@ -74,7 +90,7 @@ const App = () => {
                   <Grid item xs={12}>
                     <ListItemText
                       align={payload.userID === user ? "right" : "left"}
-                      secondary={`${payload.userID || "ABC"} ${
+                      secondary={`${payload.userName || "ABC"} ${
                         payload.datetime || "12:00"
                       }`}
                     ></ListItemText>
@@ -86,8 +102,9 @@ const App = () => {
           <Divider />
           <form
             onSubmit={(e) => {
-              setIsMyMessage(true);
-              sendChat(e);
+              if (!isError) {
+                sendChat(e);
+              }
             }}
           >
             <Grid
@@ -98,6 +115,7 @@ const App = () => {
                 width: "100%",
                 height: 60,
                 textAlign: "center",
+                backgroundColor: "#FFFFFF",
               }}
             >
               <Grid item xs={11}>
@@ -109,10 +127,17 @@ const App = () => {
                   }}
                   label="Type Something"
                   fullWidth
+                  required
+                  onError={() => setIsError(true)}
                 />
               </Grid>
               <Grid xs={1} align="right">
-                <Fab color="primary" aria-label="add" type="submit">
+                <Fab
+                  color="primary"
+                  disabled={isError}
+                  aria-label="add"
+                  type="submit"
+                >
                   <SendIcon />
                 </Fab>
               </Grid>
