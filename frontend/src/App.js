@@ -50,7 +50,7 @@ const App = () => {
 
   useEffect(() => {
     localStorage.setItem("currentUser", JSON.stringify(uuidv4()));
-    localStorage.setItem("userName", JSON.stringify("sender"));
+    localStorage.setItem("userName", JSON.stringify("ABC"));
   }, []);
 
   return (
@@ -88,13 +88,19 @@ const App = () => {
                     ></ListItemText>
                   </Grid>
                   <Grid item xs={12}>
-                    <ListItemText
+                    {/* <ListItemText
                       align={payload.userID === user ? "right" : "left"}
                       secondary={`${
                         payload.userID === user
                           ? JSON.parse(userName)
                           : "receiver"
                       } ${payload.datetime || "12:00"}`}
+                    ></ListItemText> */}
+                    <ListItemText
+                      align={payload.userID === user ? "right" : "left"}
+                      secondary={`${JSON.parse(userName)} ${
+                        payload.datetime || "12:00"
+                      }`}
                     ></ListItemText>
                   </Grid>
                 </Grid>
