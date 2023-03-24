@@ -26,7 +26,7 @@ const App = () => {
   const emitSocket = () => {
     const payloadParam = {
       message,
-      userName: user,
+      userID: user,
       datetime: Date.now().toString,
       isMyMessage: isMyMessage,
     };
@@ -67,14 +67,14 @@ const App = () => {
                 <Grid container>
                   <Grid item xs={12}>
                     <ListItemText
-                      align={payload.userName === user ? "right" : "left"}
+                      align={payload.userID === user ? "right" : "left"}
                       primary={payload.message}
                     ></ListItemText>
                   </Grid>
                   <Grid item xs={12}>
                     <ListItemText
-                      align={payload.userName === user ? "right" : "left"}
-                      secondary={`${payload.userName || "ABC"} ${
+                      align={payload.userID === user ? "right" : "left"}
+                      secondary={`${payload.userID || "ABC"} ${
                         payload.datetime || "12:00"
                       }`}
                     ></ListItemText>
@@ -84,40 +84,40 @@ const App = () => {
             ))}
           </List>
           <Divider />
-          <Grid
-            container
-            style={{
-              position: "fixed",
-              bottom: 0,
-              width: "100%",
-              height: 60,
-              textAlign: "center",
+          <form
+            onSubmit={(e) => {
+              setIsMyMessage(true);
+              sendChat(e);
             }}
           >
-            <Grid item xs={11}>
-              <TextField
-                id="outlined-basic-email"
-                value={message}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                }}
-                label="Type Something"
-                fullWidth
-              />
+            <Grid
+              container
+              style={{
+                position: "fixed",
+                bottom: 0,
+                width: "100%",
+                height: 60,
+                textAlign: "center",
+              }}
+            >
+              <Grid item xs={11}>
+                <TextField
+                  id="outlined-basic-email"
+                  value={message}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                  }}
+                  label="Type Something"
+                  fullWidth
+                />
+              </Grid>
+              <Grid xs={1} align="right">
+                <Fab color="primary" aria-label="add" type="submit">
+                  <SendIcon />
+                </Fab>
+              </Grid>
             </Grid>
-            <Grid xs={1} align="right">
-              <Fab
-                color="primary"
-                aria-label="add"
-                onClick={(e) => {
-                  setIsMyMessage(true);
-                  sendChat(e);
-                }}
-              >
-                <SendIcon />
-              </Fab>
-            </Grid>
-          </Grid>
+          </form>
         </Grid>
       </Grid>
     </div>
