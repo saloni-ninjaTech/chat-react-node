@@ -90,9 +90,11 @@ const App = () => {
                   <Grid item xs={12}>
                     <ListItemText
                       align={payload.userID === user ? "right" : "left"}
-                      secondary={`${payload.userName || "ABC"} ${
-                        payload.datetime || "12:00"
-                      }`}
+                      secondary={`${
+                        payload.userID === user
+                          ? JSON.parse(userName)
+                          : "receiver"
+                      } ${payload.datetime || "12:00"}`}
                     ></ListItemText>
                   </Grid>
                 </Grid>
