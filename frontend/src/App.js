@@ -14,6 +14,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
+import InputEmoji from "react-input-emoji";
 
 const App = () => {
   const socket = io.connect("http://localhost:5000/");
@@ -119,12 +120,10 @@ const App = () => {
               }}
             >
               <Grid item xs={11}>
-                <TextField
+                <InputEmoji
                   id="outlined-basic-email"
                   value={message}
-                  onChange={(e) => {
-                    setMessage(e.target.value);
-                  }}
+                  onChange={setMessage}
                   label="Type Something"
                   fullWidth
                   required
