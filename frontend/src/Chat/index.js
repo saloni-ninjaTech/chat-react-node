@@ -11,12 +11,12 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import React, { useState, useEffect } from "react";
-import "./App.css";
+//   import "./Chat.css";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 import InputEmoji from "react-input-emoji";
 
-const App = () => {
+const Chat = () => {
   const socket = io.connect("http://localhost:5000/");
 
   const [message, setMessage] = useState("");
@@ -53,7 +53,7 @@ const App = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="h5" className="header-message">
@@ -127,6 +127,8 @@ const App = () => {
                   label="Type Something"
                   fullWidth
                   required
+                  cleanOnEnter
+                  onEnter={!isError && emitSocket}
                   onError={() => setIsError(true)}
                 />
               </Grid>
@@ -144,8 +146,8 @@ const App = () => {
           </form>
         </Grid>
       </Grid>
-    </div>
+    </>
   );
 };
 
-export default App;
+export default Chat;
