@@ -21,16 +21,14 @@ const App = () => {
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [user, setUser] = useState(localStorage.getItem("currentUser") || "");
-  const [userName, setUserName] = useState(
-    localStorage.getItem("userName") || ""
-  );
   const [isError, setIsError] = useState(false);
 
   const emitSocket = () => {
+    const userName = localStorage.getItem("userName");
     const payloadParam = {
       message,
       userID: user,
-      userName,
+      userName: localStorage.getItem("currentUser") !== user ? userName : "YOU",
       datetime: new Date().toLocaleTimeString(),
     };
     socket.emit("chat", payloadParam);
@@ -88,19 +86,13 @@ const App = () => {
                     ></ListItemText>
                   </Grid>
                   <Grid item xs={12}>
-                    {/* <ListItemText
+                    <ListItemText
                       align={payload.userID === user ? "right" : "left"}
                       secondary={`${
                         payload.userID === user
-                          ? JSON.parse(userName)
-                          : "receiver"
+                          ? "You"
+                          : JSON.parse(payload.userName)
                       } ${payload.datetime || "12:00"}`}
-                    ></ListItemText> */}
-                    <ListItemText
-                      align={payload.userID === user ? "right" : "left"}
-                      secondary={`${JSON.parse(userName)} ${
-                        payload.datetime || "12:00"
-                      }`}
                     ></ListItemText>
                   </Grid>
                 </Grid>
